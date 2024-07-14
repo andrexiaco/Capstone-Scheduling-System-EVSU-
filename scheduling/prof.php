@@ -54,18 +54,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['Delete'])) {
         $prof_id = $_POST['prof_id'];
 
+        // Attempt to delete professor
         $result = deleteProf($prof_id);
 
-        if ($result) {
-            $_SESSION['flash_message'] = 'Deleted successfully!';
-
-            // Redirect to the same page to avoid form resubmission on page refresh
-            header('Location: ' . $_SERVER['PHP_SELF']);
-            exit();
+        if ($result === true) {
+            $_SESSION['flash_message'] = 'Professor deleted successfully!';
         } else {
-            // Set a flash error message in the session
-            $_SESSION['flash_message'] = 'There are errors. Please fix them.';
+            $_SESSION['error_message'] = 'Failed to delete professor. This professor is referenced in active schedules.';
         }
+
+        // Redirect to the same page to avoid form resubmission on page refresh
+        header('Location: ' . $_SERVER['PHP_SELF']);
+        exit();
     }
 }
 
