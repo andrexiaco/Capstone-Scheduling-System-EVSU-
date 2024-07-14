@@ -60,17 +60,28 @@ function updateProf($prof_id, $prof_name)
 
 function deleteProf($prof_id)
 {
-
     $conn = getDatabaseConnection();
 
-    $stmt = $conn->prepare("DELETE FROM professors WHERE prof_id = :prof_id");
-    $stmt->bindParam(':prof_id', $prof_id);
-    $respose = $stmt->execute();
-
-    if ($respose) {
-        return TRUE;
-    } else {
-        return FALSE;
+    try {
+        // Attempt to delete professor
+        $stmt = $conn->prepare("DELETE FROM professors WHERE prof_id = :prof_id");
+        $stmt->bindParam(':prof_id', $prof_id);
+        $stmt->execute();
+        
+        // Check if any rows were affected
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+        // Handle any PDO exceptions
+        if ($e->getCode() == '23000') {
+            return false; // Integrity constraint violation
+        } else {
+            // Handle other PDO exceptions if needed
+            return false;
+        }
     }
 }
 
@@ -412,17 +423,28 @@ function updateRoom($room_id, $room_name)
 
 function deleteRoom($room_id)
 {
-
     $conn = getDatabaseConnection();
 
-    $stmt = $conn->prepare("DELETE FROM rooms WHERE room_id = :room_id");
-    $stmt->bindParam(':room_id', $room_id);
-    $respose = $stmt->execute();
-
-    if ($respose) {
-        return TRUE;
-    } else {
-        return FALSE;
+    try {
+        // Attempt to delete professor
+        $stmt = $conn->prepare("DELETE FROM rooms WHERE room_id = :room_id");
+        $stmt->bindParam(':room_id', $room_id);
+        $stmt->execute();
+        
+        // Check if any rows were affected
+        if ($stmt->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (PDOException $e) {
+        // Handle any PDO exceptions
+        if ($e->getCode() == '23000') {
+            return false; // Integrity constraint violation
+        } else {
+            // Handle other PDO exceptions if needed
+            return false;
+        }
     }
 }
 
